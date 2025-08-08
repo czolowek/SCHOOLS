@@ -18,9 +18,10 @@ class ConnectionManager:
     async def broadcast(self, message: Message, sender: str):
         sanitized = escape(message.content)
         for user, conn in self.active_connections.items():
-            await conn.send_json({
-                "from": sender,
-                "message": sanitized
-            })
+            if user != sender:
+                await conn.send_json({
+                    "from": sender,
+                    "message": sanitized
+                })
 
 manager = ConnectionManager()
