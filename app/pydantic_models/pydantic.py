@@ -4,16 +4,19 @@ from typing import Optional
 class Message(BaseModel):
     content: str = Field(..., max_length=1000)
 
-class UserIn(BaseModel):
-    username: str
-    password: str
+class Student(BaseModel):
+    id: Optional[int]
+    name: str
 
-class UserOut(BaseModel):
-    username: str
+class Teacher(BaseModel):
+    id: Optional[int]
+    name: str
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
+class Course(BaseModel):
+    id: Optional[int]
+    title: str
+    teacher_id: int
 
-class TokenPayload(BaseModel):
-    sub: Optional[str] = None
+class Enrollment(BaseModel):
+    student_id: int
+    course_id: int
