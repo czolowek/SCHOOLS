@@ -1,4 +1,5 @@
 import enum
+import os
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum, create_engine
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker
 
@@ -10,6 +11,21 @@ class Role(enum.Enum):
 
 Base = declarative_base()
 
+class School(Base):
+    __tablename__ = "schools"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, nullable=False)
+    address = Column(String)
+    classes = relationship("Class", back_populates="school")
+
+class Class(Base):
+    __tablename__ = "classes"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    school_id = Column(Integer, ForeignKey("schools.id"))
+    school = relationship("School", back_populates="classes")
+    students = relationship("Student", back_populates="student_class")
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
@@ -20,6 +36,8 @@ class Student(Base):
     __tablename__ = "students"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
+    class_id = Column(Integer, ForeignKey("classes.id"))
+    student_class = relationship("Class", back_populates="students")
     enrollments = relationship("Enrollment", back_populates="student")
 
 class Teacher(Base):
